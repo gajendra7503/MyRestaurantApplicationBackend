@@ -1,0 +1,258 @@
+/*
+SQLyog Community v13.2.0 (64 bit)
+MySQL - 5.7.40-log : Database - restaurentapp
+*********************************************************************
+*/
+
+/*!40101 SET NAMES utf8 */;
+
+/*!40101 SET SQL_MODE=''*/;
+
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`restaurentapp` /*!40100 DEFAULT CHARACTER SET latin1 */;
+
+USE `restaurentapp`;
+
+/*Table structure for table `records` */
+
+DROP TABLE IF EXISTS `records`;
+
+CREATE TABLE `records` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `mobile` varchar(10) DEFAULT NULL,
+  `address` varchar(500) DEFAULT NULL,
+  `services` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=latin1;
+
+/*Data for the table `records` */
+
+insert  into `records`(`id`,`name`,`email`,`mobile`,`address`,`services`) values 
+(3,'Narang Cafe','nyatin@gmail.com','9767857556','GH-12, Gurgaon','Tea, coffee and snacks'),
+(12,'sachin\'s Dhaba','nihcas@gmail.com','8743453355','H-11,Gokuldham ','Tea, coffee ,lunch and dinner'),
+(18,'New veg restro','newveg@gmail.com','9833784878','H-40, Nandgaon','Gujrati thali, Rajasthani thali'),
+(21,'PubG Cafe','cafepubg@hotmail.com','7964454543','Novus tower, Gurugram','Khana, Pani, chai, coffee'),
+(22,'Shubham Mishra','shubh@gmail.com','8787876876','GH-12, Paschim Vihar','Rajasthani Thali, Snacks'),
+(26,'Vaishno Dhaba','dhabavaishno@gmail.com','8787876876','B-1665, Near Jalebi Chowk Shastri Nagar New Delhi - 110052','Rajasthani Thali');
+
+/*Table structure for table `users` */
+
+DROP TABLE IF EXISTS `users`;
+
+CREATE TABLE `users` (
+  `id` int(11) DEFAULT NULL,
+  `name` varchar(150) DEFAULT NULL,
+  `email` varchar(150) DEFAULT NULL,
+  `password` varchar(600) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL,
+  `token` varchar(765) DEFAULT NULL,
+  `mobile` varchar(150) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `users` */
+
+insert  into `users`(`id`,`name`,`email`,`password`,`created_at`,`updated_at`,`token`,`mobile`) values 
+(1,'Shubham Mishra','sm.1272.sm@gmail.com','shubh@123','2023-05-03 12:53:04','2023-05-03 12:53:04','undefined','8877686868'),
+(3,'Ayushi Thapliyal','ayushithapliyal16@gmail.com','ayushi@123','2023-05-03 15:19:10','2023-05-03 15:19:10','undefined','7868767687'),
+(4,'Yatin narang','yatin.narang@bajajcapital.com','yatin@123','2023-09-06 12:46:06','2023-05-03 15:24:43','undefined','6942069420'),
+(5,'Akshun Sinha','cocmaster1808@gmail.com','coc@1234','2023-05-03 17:11:33','2023-05-04 14:41:02','','8786868864'),
+(6,'Akshun  Anand','akshun.anand@gmail.com','anand@123','2023-05-04 16:41:07','2023-05-04 16:41:07','undefined','8787678678'),
+(NULL,'Gajendra','gajendratestingdev@gmail.com','Test@123','2023-09-03 20:00:22',NULL,'undefined','8698666878'),
+(NULL,'Yatin ','yatinnarang99@gmail.com','yatin123','2023-09-06 12:45:34',NULL,NULL,NULL),
+(NULL,'test yatin','test@gmail.com','Test1234','2023-09-06 15:51:20',NULL,'undefined','9877788888');
+
+/* Procedure structure for procedure `FetchUserDetails` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `FetchUserDetails` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `FetchUserDetails`(IN input_id INT)
+BEGIN
+    SELECT NAME, mobile INTO @R_name, @R_mobile FROM users WHERE id = input_id;
+    SELECT @R_name, @R_mobile;
+END */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `GetUserDetails` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `GetUserDetails` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetUserDetails`(IN input_id INT)
+BEGIN
+    DECLARE R_name VARCHAR(50);
+    DECLARE R_mobile VARCHAR(50);
+
+    SELECT name, mobile INTO R_name, R_mobile
+    FROM users
+    WHERE id = input_id;
+
+    SELECT R_name, R_mobile;
+END */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `nestedIF` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `nestedIF` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `nestedIF`(
+IN R_Name VARCHAR (100),
+OUT R_services VARCHAR(200))
+BEGIN 
+DECLARE RName VARCHAR(100);
+SELECT 	NAME INTO RName FROM records WHERE R_Name = NAME;
+IF RName = 'Anil Restro' THEN 
+SET R_services ='Tea and Coffee';
+ELSEIF RName = 'Narang Cafe' THEN 
+SET R_services ='Welcome ';
+ELSEIF RName = 'ajay' THEN 
+SET R_services ='Eat Healthy';
+END IF;
+END */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `proc_get_user_details` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `proc_get_user_details` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `proc_get_user_details`(
+IN user_email_id VARCHAR(255),
+	IN user_id INT
+	)
+BEGIN
+    
+    DECLARE v_user_id INT;
+    DECLARE v_name VARCHAR(255);
+    DECLARE v_password VARCHAR(255);
+    DECLARE v_mobile VARCHAR(255);
+   
+    
+   IF(user_id > 0) THEN
+   	BEGIN
+   		SELECT id, NAME, PASSWORD, mobile INTO v_user_id, v_name, v_password, v_mobile FROM USER WHERE id = user_id;
+   	END;
+   ELSE 
+   	BEGIN
+   		SELECT id, NAME, PASSWORD, mobile INTO v_user_id, v_name, v_password, v_mobile FROM USER WHERE email = user_email_id;
+   	END;
+   END IF;
+    
+    
+    
+    SELECT v_user_id AS 'user_id', v_name AS 'name', v_password AS 'password', v_mobile AS 'mobile' ;
+END */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `proc_save_user` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `proc_save_user` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `proc_save_user`(
+	IN user_name VARCHAR(255),
+	IN user_password VARCHAR(255),
+	IN user_email VARCHAR(255),
+	IN user_mobile VARCHAR(255),
+	IN user_token VARCHAR(255)
+)
+BEGIN
+	INSERT INTO USER(NAME, PASSWORD, email, mobile, token) VALUES (user_name, user_password, user_email, user_mobile, user_token);
+END */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `restrodetaiils_proc` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `restrodetaiils_proc` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `restrodetaiils_proc`(
+in R_Name varchar (100),
+out R_services varchar(200))
+begin 
+declare RName varchar(100);
+select 	name into RName from records where R_Name = Name;
+if RName = 'Anil Restro' then 
+set R_services ='Tea and Coffee';
+ELSEIF RName = 'Narang Cafe' THEN 
+SET R_services ='Welcome ';
+ELSEIF RName = 'ajay' THEN 
+SET R_services ='Eat Healthy';
+end if;
+end */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `restrodetails_proc` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `restrodetails_proc` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `restrodetails_proc`(
+in R_Name varchar (100),
+out R_services varchar(200))
+begin 
+declare RName varchar(100);
+select 	name into RName from records where R_Name = Name;
+if RName = 'Anil Restro' then 
+set R_services ='Tea and Coffee';
+ELSEIF RName = 'Narang Cafe' THEN 
+SET R_services ='Welcome ';
+ELSEIF RName = 'ajay' THEN 
+SET R_services ='Eat Healthy';
+end if;
+end */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `UserDetails` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `UserDetails` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `UserDetails`(IN input_id INT)
+BEGIN
+    DECLARE R_name VARCHAR(50);
+    DECLARE R_mobile VARCHAR(50);
+
+    SELECT name, mobile INTO R_name, R_mobile
+    FROM users
+    WHERE id = input_id;
+IF R_name IS NULL OR R_mobile IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+            SET message_TEXT = 'User not found.';
+    ELSE
+        SELECT R_name, R_mobile;
+    END IF;
+END */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `users_detail` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `users_detail` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `users_detail`()
+begin
+select * from records where id = 3;
+end */$$
+DELIMITER ;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
